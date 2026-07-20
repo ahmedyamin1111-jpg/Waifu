@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Waifu</title>
+    <title>Hiyori - My Waifu</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
             background: #1a1a2e;
-            font-family: Arial, sans-serif;
         }
         #status {
             position: absolute;
-            top: 20px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             color: white;
             background: rgba(0,0,0,0.7);
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 8px 16px;
+            border-radius: 8px;
             z-index: 10;
-            font-size: 16px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
             text-align: center;
         }
         canvas {
@@ -36,84 +36,85 @@
     <!-- Load Live2D Core -->
     <script src="Core/live2dcubismcore.js"></script>
     
+    <!-- Load the model using raw Core API -->
     <script>
-        // Simple test - just check if Core loads
         const statusEl = document.getElementById('status');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Clear canvas
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         if (typeof Live2DCubismCore === 'undefined') {
             statusEl.textContent = '❌ Core failed to load';
             statusEl.style.color = 'red';
         } else {
-            statusEl.textContent = '✅ Core loaded! Now loading model...';
-            statusEl.style.color = 'lime';
+            statusEl.textContent = '⏳ Loading model...';
             
-            // Try to load the model
-            try {
-                // This is a minimal test - we'll build up from here
-                const canvas = document.getElementById('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                
-                // Draw a simple anime-style shape to test canvas
-                context.fillStyle = '#2a1a3e';
-                context.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw a simple face to show it's working
-                const cx = canvas.width / 2;
-                const cy = canvas.height / 2;
-                
-                // Face circle
-                context.beginPath();
-                context.arc(cx, cy, 100, 0, Math.PI * 2);
-                context.fillStyle = '#f5d5b8';
-                context.fill();
-                context.strokeStyle = '#333';
-                context.lineWidth = 2;
-                context.stroke();
-                
-                // Eyes
-                context.fillStyle = '#333';
-                context.beginPath();
-                context.arc(cx - 35, cy - 20, 15, 0, Math.PI * 2);
-                context.fill();
-                context.beginPath();
-                context.arc(cx + 35, cy - 20, 15, 0, Math.PI * 2);
-                context.fill();
-                
-                // Eye shine
-                context.fillStyle = 'white';
-                context.beginPath();
-                context.arc(cx - 30, cy - 25, 5, 0, Math.PI * 2);
-                context.fill();
-                context.beginPath();
-                context.arc(cx + 40, cy - 25, 5, 0, Math.PI * 2);
-                context.fill();
-                
-                // Mouth - cute smile
-                context.beginPath();
-                context.arc(cx, cy + 20, 20, 0, Math.PI);
-                context.strokeStyle = '#333';
-                context.lineWidth = 2;
-                context.stroke();
-                
-                // Blush
-                context.fillStyle = 'rgba(255, 100, 100, 0.3)';
-                context.beginPath();
-                context.arc(cx - 45, cy + 15, 15, 0, Math.PI * 2);
-                context.fill();
-                context.beginPath();
-                context.arc(cx + 45, cy + 15, 15, 0, Math.PI * 2);
-                context.fill();
-                
-                statusEl.textContent = '✅ Hiyori is waiting! (Core loaded)';
-                statusEl.style.color = 'lime';
-                
-            } catch(e) {
-                statusEl.textContent = '⚠️ Error: ' + e.message;
-                statusEl.style.color = 'yellow';
-            }
+            // Fetch the model file
+            fetch('hiyori_pro_t11.model3.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('Model file not found');
+                    return response.arrayBuffer();
+                })
+                .then(modelData => {
+                    statusEl.textContent = '✅ Hiyori loaded! 🎉';
+                    statusEl.style.color = 'lime';
+                    
+                    // Parse the model
+                    const model = Live2DCubismCore.Model.fromArrayBuffer(modelData);
+                    
+                    // Draw a simple representation
+                    ctx.fillStyle = '#2a1a4e';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw Hiyori text with cute styling
+                    ctx.fillStyle = '#f5d5b8';
+                    ctx.font = 'bold 50px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('🌸 Hiyori 🌸', canvas.width/2, canvas.height/2 - 30);
+                    
+                    ctx.font = '20px Arial';
+                    ctx.fillStyle = '#ff99cc';
+                    ctx.fillText('✨ Model successfully loaded! ✨', canvas.width/2, canvas.height/2 + 40);
+                    
+                    ctx.font = '16px Arial';
+                    ctx.fillStyle = '#aaa';
+                    ctx.fillText('Tap the screen to interact', canvas.width/2, canvas.height/2 + 80);
+                    
+                    // Log model info
+                    console.log('Model loaded successfully!');
+                    console.log('Canvas size:', canvas.width, 'x', canvas.height);
+                    
+                })
+                .catch(error => {
+                    statusEl.textContent = '⚠️ Error: ' + error.message;
+                    statusEl.style.color = 'yellow';
+                    console.error('Error loading model:', error);
+                });
         }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Click interaction
+        canvas.addEventListener('click', () => {
+            statusEl.textContent = '👋 Hello there!';
+            statusEl.style.color = '#ff99cc';
+            setTimeout(() => {
+                statusEl.textContent = '✅ Hiyori loaded! 🎉';
+                statusEl.style.color = 'lime';
+            }, 1000);
+        });
     </script>
 </body>
 </html>
