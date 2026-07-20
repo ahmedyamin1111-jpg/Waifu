@@ -3,10 +3,21 @@
 <head>
     <title>My Waifu</title>
 </head>
-
 <body style="background:black;color:white;font-size:40px;text-align:center;padding-top:150px;">
-
-Hello Hiyori ❤️
-
+    Hello Hiyori ❤️
+    <br>
+    <small style="font-size:20px;color:gray;">Loading Live2D...</small>
+    
+    <!-- Load Live2D Core -->
+    <script src="Core/live2dcubismcore.js"></script>
+    <script>
+        // Check if Live2D loaded
+        if (typeof Live2DCubismCore === 'undefined') {
+            document.body.innerHTML = '❌ Live2D Core failed to load';
+        } else {
+            console.log('✅ Live2D Core loaded!');
+            document.body.innerHTML += '<br><small style="color:lime;">✅ Live2D Core ready!</small>';
+        }
+    </script>
 </body>
 </html>
