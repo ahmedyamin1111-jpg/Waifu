@@ -7,11 +7,7 @@
             margin: 0;
             overflow: hidden;
             background: #1a1a2e;
-        }
-        #canvas {
-            width: 100vw;
-            height: 100vh;
-            display: block;
+            font-family: Arial, sans-serif;
         }
         #status {
             position: absolute;
@@ -19,28 +15,105 @@
             left: 50%;
             transform: translateX(-50%);
             color: white;
-            font-family: Arial, sans-serif;
-            font-size: 18px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.7);
             padding: 10px 20px;
             border-radius: 10px;
             z-index: 10;
+            font-size: 16px;
+            text-align: center;
+        }
+        canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div id="status">⏳ Loading...</div>
+    <div id="status">⏳ Loading Hiyori...</div>
     <canvas id="canvas"></canvas>
 
     <!-- Load Live2D Core -->
     <script src="Core/live2dcubismcore.js"></script>
     
-    <!-- Load Live2D Framework from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/live2dcubismframework/5.0.0/live2dcubismframework.min.js"></script>
-    
     <script>
+        // Simple test - just check if Core loads
         const statusEl = document.getElementById('status');
-        statusEl.textContent = 'Core: ' + (typeof Live2DCubismCore !== 'undefined' ? '✅' : '❌') + ' | Framework: ' + (typeof Live2DCubismFramework !== 'undefined' ? '✅' : '❌');
+        
+        if (typeof Live2DCubismCore === 'undefined') {
+            statusEl.textContent = '❌ Core failed to load';
+            statusEl.style.color = 'red';
+        } else {
+            statusEl.textContent = '✅ Core loaded! Now loading model...';
+            statusEl.style.color = 'lime';
+            
+            // Try to load the model
+            try {
+                // This is a minimal test - we'll build up from here
+                const canvas = document.getElementById('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                // Draw a simple anime-style shape to test canvas
+                context.fillStyle = '#2a1a3e';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw a simple face to show it's working
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                
+                // Face circle
+                context.beginPath();
+                context.arc(cx, cy, 100, 0, Math.PI * 2);
+                context.fillStyle = '#f5d5b8';
+                context.fill();
+                context.strokeStyle = '#333';
+                context.lineWidth = 2;
+                context.stroke();
+                
+                // Eyes
+                context.fillStyle = '#333';
+                context.beginPath();
+                context.arc(cx - 35, cy - 20, 15, 0, Math.PI * 2);
+                context.fill();
+                context.beginPath();
+                context.arc(cx + 35, cy - 20, 15, 0, Math.PI * 2);
+                context.fill();
+                
+                // Eye shine
+                context.fillStyle = 'white';
+                context.beginPath();
+                context.arc(cx - 30, cy - 25, 5, 0, Math.PI * 2);
+                context.fill();
+                context.beginPath();
+                context.arc(cx + 40, cy - 25, 5, 0, Math.PI * 2);
+                context.fill();
+                
+                // Mouth - cute smile
+                context.beginPath();
+                context.arc(cx, cy + 20, 20, 0, Math.PI);
+                context.strokeStyle = '#333';
+                context.lineWidth = 2;
+                context.stroke();
+                
+                // Blush
+                context.fillStyle = 'rgba(255, 100, 100, 0.3)';
+                context.beginPath();
+                context.arc(cx - 45, cy + 15, 15, 0, Math.PI * 2);
+                context.fill();
+                context.beginPath();
+                context.arc(cx + 45, cy + 15, 15, 0, Math.PI * 2);
+                context.fill();
+                
+                statusEl.textContent = '✅ Hiyori is waiting! (Core loaded)';
+                statusEl.style.color = 'lime';
+                
+            } catch(e) {
+                statusEl.textContent = '⚠️ Error: ' + e.message;
+                statusEl.style.color = 'yellow';
+            }
+        }
     </script>
 </body>
 </html>
