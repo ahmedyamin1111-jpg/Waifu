@@ -36,7 +36,6 @@
     <!-- Load Live2D Core -->
     <script src="Core/live2dcubismcore.js"></script>
     
-    <!-- Load the model using raw Core API -->
     <script>
         const statusEl = document.getElementById('status');
         const canvas = document.getElementById('canvas');
@@ -54,26 +53,27 @@
             statusEl.textContent = '❌ Core failed to load';
             statusEl.style.color = 'red';
         } else {
-            statusEl.textContent = '⏳ Loading model...';
+            statusEl.textContent = '✅ Core loaded! Attempting to load model...';
             
-            // Fetch the model file
+            // Log what's available in the Core
+            console.log('Live2DCubismCore methods:', Object.keys(Live2DCubismCore));
+            
+            // Try to load using fetch
             fetch('hiyori_pro_t11.model3.json')
                 .then(response => {
                     if (!response.ok) throw new Error('Model file not found');
-                    return response.arrayBuffer();
+                    return response.text();
                 })
-                .then(modelData => {
-                    statusEl.textContent = '✅ Hiyori loaded! 🎉';
+                .then(jsonText => {
+                    const modelData = JSON.parse(jsonText);
+                    statusEl.textContent = '✅ Model loaded! Hiyori is here! 🎉';
                     statusEl.style.color = 'lime';
                     
-                    // Parse the model
-                    const model = Live2DCubismCore.Model.fromArrayBuffer(modelData);
-                    
-                    // Draw a simple representation
+                    // Display Hiyori
                     ctx.fillStyle = '#2a1a4e';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     
-                    // Draw Hiyori text with cute styling
+                    // Draw Hiyori
                     ctx.fillStyle = '#f5d5b8';
                     ctx.font = 'bold 50px Arial';
                     ctx.textAlign = 'center';
@@ -82,21 +82,26 @@
                     
                     ctx.font = '20px Arial';
                     ctx.fillStyle = '#ff99cc';
-                    ctx.fillText('✨ Model successfully loaded! ✨', canvas.width/2, canvas.height/2 + 40);
+                    ctx.fillText('✨ Model JSON loaded! ✨', canvas.width/2, canvas.height/2 + 40);
                     
                     ctx.font = '16px Arial';
                     ctx.fillStyle = '#aaa';
-                    ctx.fillText('Tap the screen to interact', canvas.width/2, canvas.height/2 + 80);
+                    ctx.fillText('Model size: ' + JSON.stringify(modelData).length + ' bytes', canvas.width/2, canvas.height/2 + 80);
                     
-                    // Log model info
-                    console.log('Model loaded successfully!');
-                    console.log('Canvas size:', canvas.width, 'x', canvas.height);
+                    // Show available motions
+                    if (modelData.Motions) {
+                        const motions = Object.keys(modelData.Motions);
+                        ctx.font = '14px Arial';
+                        ctx.fillStyle = '#88ddff';
+                        ctx.fillText('Motions: ' + motions.join(', '), canvas.width/2, canvas.height/2 + 115);
+                    }
                     
+                    console.log('Model JSON loaded:', modelData);
                 })
                 .catch(error => {
                     statusEl.textContent = '⚠️ Error: ' + error.message;
                     statusEl.style.color = 'yellow';
-                    console.error('Error loading model:', error);
+                    console.error('Error:', error);
                 });
         }
         
@@ -108,12 +113,12 @@
         
         // Click interaction
         canvas.addEventListener('click', () => {
-            statusEl.textContent = '👋 Hello there!';
+            statusEl.textContent = '👋 Hello! Hiyori says hi!';
             statusEl.style.color = '#ff99cc';
             setTimeout(() => {
-                statusEl.textContent = '✅ Hiyori loaded! 🎉';
+                statusEl.textContent = '✅ Hiyori is here! 🎉';
                 statusEl.style.color = 'lime';
-            }, 1000);
+            }, 1500);
         });
     </script>
 </body>
