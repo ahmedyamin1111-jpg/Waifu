@@ -2,21 +2,50 @@
 <html>
 <head>
     <title>My Waifu</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #1a1a2e;
+        }
+        #canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+        #status {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 10px;
+            z-index: 10;
+        }
+    </style>
 </head>
-<body style="background:black;color:white;font-size:40px;text-align:center;padding-top:150px;">
-    Hello Hiyori ❤️
-    <br>
-    <small style="font-size:20px;color:gray;">Loading Live2D...</small>
-    
+<body>
+    <div id="status">⏳ Loading Hiyori...</div>
+    <canvas id="canvas"></canvas>
+
     <!-- Load Live2D Core -->
     <script src="Core/live2dcubismcore.js"></script>
+    
+    <!-- Load Live2D Framework -->
+    <script src="Framework/src/live2dcubismframework.js"></script>
+    
+    <!-- Main script -->
     <script>
-        // Check if Live2D loaded
-        if (typeof Live2DCubismCore === 'undefined') {
-            document.body.innerHTML = '❌ Live2D Core failed to load';
+        // Check if Framework loaded
+        if (typeof Live2DCubismFramework === 'undefined') {
+            document.getElementById('status').textContent = '❌ Framework failed to load';
         } else {
-            console.log('✅ Live2D Core loaded!');
-            document.body.innerHTML += '<br><small style="color:lime;">✅ Live2D Core ready!</small>';
+            document.getElementById('status').textContent = '✅ Framework loaded! Loading model...';
+            console.log('✅ Framework loaded!');
         }
     </script>
 </body>
