@@ -29,27 +29,18 @@
     </style>
 </head>
 <body>
-    <div id="status">⏳ Loading Hiyori...</div>
+    <div id="status">⏳ Loading...</div>
     <canvas id="canvas"></canvas>
 
-    <!-- Load Live2D Core (local) -->
+    <!-- Load Live2D Core -->
     <script src="Core/live2dcubismcore.js"></script>
     
-    <!-- Load Live2D Framework (from CDN) -->
-    <script src="https://unpkg.com/@live2d/cubismframework@5.0.0/dist/live2dcubismframework.min.js"></script>
+    <!-- Load Live2D Framework from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/live2dcubismframework/5.0.0/live2dcubismframework.min.js"></script>
     
     <script>
-        // Check if both loaded
         const statusEl = document.getElementById('status');
-        
-        if (typeof Live2DCubismCore === 'undefined') {
-            statusEl.textContent = '❌ Core failed to load';
-        } else if (typeof Live2DCubismFramework === 'undefined') {
-            statusEl.textContent = '❌ Framework failed to load';
-        } else {
-            statusEl.textContent = '✅ Both loaded! Ready for Hiyori! 🎉';
-            console.log('✅ Core and Framework loaded!');
-        }
+        statusEl.textContent = 'Core: ' + (typeof Live2DCubismCore !== 'undefined' ? '✅' : '❌') + ' | Framework: ' + (typeof Live2DCubismFramework !== 'undefined' ? '✅' : '❌');
     </script>
 </body>
 </html>
