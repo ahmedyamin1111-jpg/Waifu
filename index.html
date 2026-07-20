@@ -32,20 +32,24 @@
     <div id="status">⏳ Loading Hiyori...</div>
     <canvas id="canvas"></canvas>
 
-    <!-- Load Live2D Core -->
+    <!-- Load Live2D Core (local) -->
     <script src="Core/live2dcubismcore.js"></script>
     
-    <!-- Load Live2D Framework -->
-    <script src="Framework/src/live2dcubismframework.js"></script>
+    <!-- Load Live2D Framework (from CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@live2d/cubismframework@5/dist/live2dcubismframework.min.js"></script>
     
-    <!-- Main script -->
     <script>
-        // Check if Framework loaded
-        if (typeof Live2DCubismFramework === 'undefined') {
-            document.getElementById('status').textContent = '❌ Framework failed to load';
+        // Check if both loaded
+        const statusEl = document.getElementById('status');
+        
+        if (typeof Live2DCubismCore === 'undefined') {
+            statusEl.textContent = '❌ Core failed to load';
+        } else if (typeof Live2DCubismFramework === 'undefined') {
+            statusEl.textContent = '❌ Framework failed to load (check CDN)';
+            console.log('Core loaded but Framework not found');
         } else {
-            document.getElementById('status').textContent = '✅ Framework loaded! Loading model...';
-            console.log('✅ Framework loaded!');
+            statusEl.textContent = '✅ Both loaded! Ready for Hiyori! 🎉';
+            console.log('✅ Core and Framework loaded!');
         }
     </script>
 </body>
